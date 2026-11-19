@@ -28,6 +28,8 @@ namespace HypaceTray
         public string LevelColour { get; private set; }
         public string ChargingBolt { get; private set; }
         public string ShowNumber { get; private set; }
+        public string TrayHintTitle { get; private set; }
+        public string TrayHintText { get; private set; }
 
         // format strings: {0} = level, {1} = when it was last read
         string lowText, criticalText;
@@ -56,6 +58,8 @@ namespace HypaceTray
             LevelColour = "Charged part in level colours",
             ChargingBolt = "Show charging bolt",
             ShowNumber = "Show battery percentage",
+            TrayHintTitle = "Battery is left of ^",
+            TrayHintText = "Windows put HypaceTray's tray icon under ^. To show the battery right of ^, open ^ and drag that icon onto the taskbar.",
             lowText = "{0}% left.",
             criticalText = "{0}% left, please charge it soon.",
             notOnline = "Mouse not online (move it to wake it up)",
@@ -92,6 +96,8 @@ namespace HypaceTray
             LevelColour = "电量部分用电量颜色",
             ChargingBolt = "充电时显示闪电",
             ShowNumber = "显示电量数字",
+            TrayHintTitle = "电量显示在了 ^ 的左边",
+            TrayHintText = "Windows 把 HypaceTray 的托盘图标收进了 ^ 里。想让电量显示在 ^ 的右边，点开 ^，把这个图标拖到任务栏上。",
             lowText = "剩余 {0}%。",
             criticalText = "剩余 {0}%，请尽快充电。",
             notOnline = "鼠标未在线（晃动一下鼠标唤醒）",

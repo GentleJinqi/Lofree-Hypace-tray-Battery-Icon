@@ -1209,6 +1209,48 @@ namespace HypaceTray.Tests
                 Check(UiText.For(Language.Chinese).ShowNumber == "显示电量数字", UiText.For(Language.Chinese).ShowNumber);
             });
 
+            // ---------- first-run reminder: the tray icon under ^ ----------
+            const string exe = @"C:\Users\someone\Desktop\HypaceTray.exe";
+
+            Test("TrayHintAfterTenSecondsUnderChevron", () =>
+            {
+                var hint = new TrayHint(null, exe);
+                for (int i = 1; i < TrayHint.WaitTicks; i++) Check(!hint.Tick(true), "shown after " + i + " s");
+                Check(TrayHint.WaitTicks == 10, "waits " + TrayHint.WaitTicks + " s");
+                Check(hint.Tick(true), "not shown after 10 s under ^");
+                for (int i = 0; i < 30; i++) Check(!hint.Tick(true), "shown twice");
+            });
+
+            Test("TrayHintNotWhileOnTaskbar", () =>
+            {
+                var hint = new TrayHint(null, exe);
+                for (int i = 0; i < 30; i++) Check(!hint.Tick(false), "shown while the icon is on the taskbar");
+                for (int i = 1; i < 10; i++) hint.Tick(true);
+                Check(!hint.Tick(false), "shown when the icon came out of ^");
+                for (int i = 1; i < 10; i++) Check(!hint.Tick(true), "the wait did not start again");
+                Check(hint.Tick(true), "not shown after a full 10 s under ^");
+            });
+
+            Test("TrayHintOncePerLocation", () =>
+            {
+                var same = new TrayHint(@"c:\users\SOMEONE\desktop\hypacetray.exe", exe);
+                for (int i = 0; i < 30; i++) Check(!same.Tick(true), "shown again for the same exe");
+                var moved = new TrayHint(@"D:\Tools\HypaceTray.exe", exe);
+                bool shown = false;
+                for (int i = 0; i < 30; i++) shown |= moved.Tick(true);
+                Check(shown, "not shown for the exe in a new folder");
+            });
+
+            Test("TrayHintText", () =>
+            {
+                UiText en = UiText.For(Language.English), zh = UiText.For(Language.Chinese);
+                Check(en.TrayHintTitle == "Battery is left of ^", en.TrayHintTitle);
+                Check(en.TrayHintText == "Windows put HypaceTray's tray icon under ^. To show the battery right of ^, open ^ and drag that icon onto the taskbar.", en.TrayHintText);
+                Check(zh.TrayHintTitle == "电量显示在了 ^ 的左边", zh.TrayHintTitle);
+                Check(zh.TrayHintText == "Windows 把 HypaceTray 的托盘图标收进了 ^ 里。想让电量显示在 ^ 的右边，点开 ^，把这个图标拖到任务栏上。", zh.TrayHintText);
+                Check(en.TrayHintText.Length < 256 && zh.TrayHintText.Length < 256 && en.TrayHintTitle.Length < 64, "too long for a notification");
+            });
+
             Test("MouseSettingsUnknownValues", () =>
             {
                 var m = MouseSettings.Parse(SettingsText.Parse("mouseStyle=x\ncolourway=Pink\nlevelDisplay=?\nchargingBolt=maybe\ncolourway=1"));

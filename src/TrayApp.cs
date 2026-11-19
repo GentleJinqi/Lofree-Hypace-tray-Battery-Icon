@@ -38,7 +38,8 @@ namespace HypaceTray
         // right of ^: that icon stays in the tray, drawn fully transparent, so the tray keeps room for the block.
         // Windows remembers icons by ID (1, 2 in creation order); the number icon is created first to keep ID 1, the
         // slot the user already made visible. If that icon is in the ^ overflow, the block sits just left of the tray
-        // area instead, and the number icon shows the number (dragging it out of ^ moves the block into its slot).
+        // area instead, and the number icon shows the number (dragging it out of ^ moves the block into its slot);
+        // a notification tells the user so once (TrayHint), as a new exe location always starts under ^.
         // If the block cannot attach to the taskbar at all, both tray icons show their pictures.
         // A low-battery alert needs a visible tray icon: the mouse icon appears for the alert and hides again.
         enum Placement { None, InSlot, BesideTray, TrayIcons }
@@ -53,6 +54,7 @@ namespace HypaceTray
         readonly IntPtr blankHandle;
         Icon numberIcon;
         Placement placement = Placement.None;
+        readonly TrayHint trayHint;
         readonly ToolStripMenuItem statusItem, refreshItem, autoStartItem, webItem, numberItem, languageItem, englishItem, chineseItem, exitItem;
         readonly Control ui;
         readonly Thread worker;
@@ -89,6 +91,9 @@ namespace HypaceTray
             string savedLanguage;
             settings.TryGetValue("language", out savedLanguage);
             text = UiText.For(UiText.ParseLanguage(savedLanguage));
+            string hintShownFor;
+            settings.TryGetValue("trayHintShown", out hintShownFor);
+            trayHint = new TrayHint(hintShownFor, Application.ExecutablePath);
 
             statusItem = new ToolStripMenuItem(text.Connecting) { Enabled = false };
             refreshItem = new ToolStripMenuItem("", null, delegate { poke.Set(); });
@@ -140,7 +145,7 @@ namespace HypaceTray
             menuOwner.CreateHandle(new CreateParams());   // hidden top-level window that owns the badge's menu
             badge.LeftClick += delegate { poke.Set(); };
             badge.RightClick += delegate { ShowBadgeMenu(); };
-            trackTimer.Tick += delegate { UpdatePlacement(); };
+            trackTimer.Tick += delegate { UpdatePlacement(); CheckTrayHint(); };
             trackTimer.Start();
             alertTimer.Tick += delegate { alertTimer.Stop(); ShowMouseIcon(); };
 
@@ -256,6 +261,15 @@ namespace HypaceTray
             mouseTray.ShowBalloonTip(5000, title, text, icon);
             alertTimer.Stop();
             alertTimer.Start();
+        }
+
+        // The first-run reminder, from the number icon: it is the icon to drag, and it is visible under ^.
+        void CheckTrayHint()
+        {
+            if (!trayHint.Tick(placement == Placement.BesideTray)) return;
+            settings["trayHintShown"] = Application.ExecutablePath;
+            SaveSettings();
+            numberTray.ShowBalloonTip(10000, text.TrayHintTitle, text.TrayHintText, ToolTipIcon.Info);
         }
 
         void Render()

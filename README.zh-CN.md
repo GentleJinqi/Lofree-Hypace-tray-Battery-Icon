@@ -26,10 +26,10 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 
 ## 安装和运行
 
-1. 从[最新版本](https://github.com/GentleJinqi/Lofree-Hypace-tray-Battery-Icon/releases/latest)下载 `HypaceTray.exe`，放到一个固定的文件夹里。开机自启动记住的是程序所在的位置，所以先选好文件夹。
+1. 从[最新版本](https://github.com/GentleJinqi/Lofree-Hypace-tray-Battery-Icon/releases/latest)下载 `HypaceTray.exe`，放到一个固定的文件夹里。Windows 记托盘图标、开机自启动记程序，都是按 exe 所在的位置，所以先选好文件夹。
 2. 双击运行。程序没有数字签名，Windows 可能会提示"Windows 已保护你的电脑"：点"更多信息"，再点"仍要运行"。
 3. 想开机自动运行，在右键菜单里勾选 Start with Windows（中文界面下是"开机自启动"）。
-4. 第一次运行时，Windows 通常会把新的托盘图标收进 `^` 里，这时电量会先显示在 `^` 的左边。点开 `^`，把里面的数字图标拖到任务栏上（或者在 设置 → 个性化 → 任务栏 → 其他系统托盘图标 里打开 HypaceTray），电量就会显示在 `^` 的右边。
+4. 第一次运行时，Windows 会把新的托盘图标收进 `^` 里，这时电量会先显示在 `^` 的左边，程序也会弹一次通知提醒。点开 `^`，把 HypaceTray 的图标拖到任务栏上（或者在 设置 → 个性化 → 任务栏 → 其他系统托盘图标 里打开 HypaceTray），电量就会显示在 `^` 的右边；之后一直如此，除非把 exe 移到别的文件夹。
 
 每个版本都由 GitHub Actions 用该版本的源码编译，版本页面上列出了 exe 的 SHA-256。
 

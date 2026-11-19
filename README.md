@@ -26,10 +26,10 @@ Two more colourways, three ways of showing the level and a drawn style are in th
 
 ## Install and run
 
-1. Download `HypaceTray.exe` from the [latest release](https://github.com/GentleJinqi/Lofree-Hypace-tray-Battery-Icon/releases/latest) and put it in a folder of its own. **Start with Windows** remembers where the program is, so choose the folder first.
+1. Download `HypaceTray.exe` from the [latest release](https://github.com/GentleJinqi/Lofree-Hypace-tray-Battery-Icon/releases/latest) and put it in a folder of its own. Windows remembers the tray icon, and **Start with Windows** remembers the program, by where the exe is, so choose the folder first.
 2. Double-click it. The program is not signed, so Windows may say "Windows protected your PC": click **More info**, then **Run anyway**.
 3. To start it with Windows, tick **Start with Windows** in its right-click menu.
-4. On first run Windows usually tucks the new tray icon under `^`, so the battery first shows left of `^`. Open `^` and drag the number icon onto the taskbar (or turn HypaceTray on under Settings → Personalization → Taskbar → Other system tray icons); the battery then shows right of `^`.
+4. On first run Windows puts the new tray icon under `^`, so the battery first shows left of `^`, and the program reminds you with a notification. Open `^` and drag the HypaceTray icon onto the taskbar (or turn HypaceTray on under Settings → Personalization → Taskbar → Other system tray icons); the battery then shows right of `^`, and stays there until you move the exe to another folder.
 
 Each release is built by GitHub Actions from that version's source code; the release page gives the exe's SHA-256.
 
