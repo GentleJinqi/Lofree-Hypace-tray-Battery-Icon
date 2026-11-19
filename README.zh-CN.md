@@ -26,6 +26,17 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 
 ## 安装和运行
 
+1. 从[最新版本](https://github.com/GentleJinqi/Lofree-Hypace-tray-Battery-Icon/releases/latest)下载 `HypaceTray.exe`，放到一个固定的文件夹里。开机自启动记住的是程序所在的位置，所以先选好文件夹。
+2. 双击运行。程序没有数字签名，Windows 可能会提示"Windows 已保护你的电脑"：点"更多信息"，再点"仍要运行"。
+3. 想开机自动运行，在右键菜单里勾选 Start with Windows（中文界面下是"开机自启动"）。
+4. 第一次运行时，Windows 通常会把新的托盘图标收进 `^` 里，这时电量会先显示在 `^` 的左边。点开 `^`，把里面的数字图标拖到任务栏上（或者在 设置 → 个性化 → 任务栏 → 其他系统托盘图标 里打开 HypaceTray），电量就会显示在 `^` 的右边。
+
+每个版本都由 GitHub Actions 用该版本的源码编译，版本页面上列出了 exe 的 SHA-256。
+
+### 自己编译
+
+想修改代码，或者想运行自己编译的程序：
+
 1. 下载本仓库：点 **Code → Download ZIP** 后解压，或者 `git clone`。
 2. 在仓库目录里打开 PowerShell，运行下面的命令，用 Windows 自带的 C# 编译器生成 `build\HypaceTray.exe`（不需要 Visual Studio 或 .NET SDK）：
 
@@ -33,8 +44,7 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
    powershell -ExecutionPolicy Bypass -File .\build.ps1
    ```
 
-3. 双击 `build\HypaceTray.exe`。想开机自动运行，在右键菜单里勾选 Start with Windows（中文界面下是"开机自启动"）。
-4. 第一次运行时，Windows 通常会把新的托盘图标收进 `^` 里，这时电量会先显示在 `^` 的左边。点开 `^`，把里面的数字图标拖到任务栏上（或者在 设置 → 个性化 → 任务栏 → 其他系统托盘图标 里打开 HypaceTray），电量就会显示在 `^` 的右边。
+3. 像上面一样运行 `build\HypaceTray.exe`。
 
 ## 功能
 
@@ -140,6 +150,8 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 ## 开发
 
 `build.ps1` 同时生成三个程序：`HypaceTray.exe`（托盘程序）、`icontests.exe`（图标绘制和菜单文字的测试，运行后应显示 `PASS`）、`probe.exe [秒数]`（命令行调试工具，打印接收器返回的原始数据和电量）。
+
+每次推送到 `main`，GitHub Actions 都会编译并测试。推送版本标签（例如 `v1.0.1`，要和 `src/AssemblyInfo.cs` 里的版本号一致）后，还会用编译出的 `HypaceTray.exe` 自动发布新版本。
 
 ## 原理
 

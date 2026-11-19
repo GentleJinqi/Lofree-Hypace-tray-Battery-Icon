@@ -26,6 +26,17 @@ Two more colourways, three ways of showing the level and a drawn style are in th
 
 ## Install and run
 
+1. Download `HypaceTray.exe` from the [latest release](https://github.com/GentleJinqi/Lofree-Hypace-tray-Battery-Icon/releases/latest) and put it in a folder of its own. **Start with Windows** remembers where the program is, so choose the folder first.
+2. Double-click it. The program is not signed, so Windows may say "Windows protected your PC": click **More info**, then **Run anyway**.
+3. To start it with Windows, tick **Start with Windows** in its right-click menu.
+4. On first run Windows usually tucks the new tray icon under `^`, so the battery first shows left of `^`. Open `^` and drag the number icon onto the taskbar (or turn HypaceTray on under Settings → Personalization → Taskbar → Other system tray icons); the battery then shows right of `^`.
+
+Each release is built by GitHub Actions from that version's source code; the release page gives the exe's SHA-256.
+
+### Build it yourself
+
+To change the code, or to run a program you built yourself:
+
 1. Download this repository: **Code → Download ZIP** and unzip it, or `git clone` it.
 2. Open PowerShell in the repository folder and build `build\HypaceTray.exe` with the C# compiler that ships with Windows (no Visual Studio or .NET SDK needed):
 
@@ -33,8 +44,7 @@ Two more colourways, three ways of showing the level and a drawn style are in th
    powershell -ExecutionPolicy Bypass -File .\build.ps1
    ```
 
-3. Double-click `build\HypaceTray.exe`. To start it with Windows, tick **Start with Windows** in its right-click menu.
-4. On first run Windows usually tucks the new tray icon under `^`, so the battery first shows left of `^`. Open `^` and drag the number icon onto the taskbar (or turn HypaceTray on under Settings → Personalization → Taskbar → Other system tray icons); the battery then shows right of `^`.
+3. Run `build\HypaceTray.exe` as above.
 
 ## Features
 
@@ -138,6 +148,8 @@ Dark taskbar above, light below, in the same states.
 ## Development
 
 `build.ps1` builds three programs: `HypaceTray.exe` (the tray program), `icontests.exe` (tests for the icon drawing and the menu texts; it should print `PASS`) and `probe.exe [seconds]` (a command-line debugging tool that prints the receiver's raw replies and the battery level).
+
+GitHub Actions builds and tests every push to `main`. Pushing a version tag such as `v1.0.1` (the same version as in `src/AssemblyInfo.cs`) also publishes a release with the `HypaceTray.exe` it built.
 
 ## How it works
 
