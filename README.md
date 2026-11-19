@@ -6,9 +6,19 @@ Shows the battery level of a Lofree Hypace mouse right in the Windows taskbar: t
 
 ![In the taskbar: the battery percentage and the mouse, right of ^](docs/images/taskbar.png)
 
-The screenshots show the **Drawn** mouse style; by default the mouse is a photo of the Hypace in Ghost (see **Mouse style** under Features). All states (top row: dark taskbar, bottom row: light taskbar): full, 62%, 35%, 12% (number turns red), charging (blue), asleep (grey, showing the last level read), no reading yet (`--`).
+By default the mouse is a photo of the Hypace in Ghost, whose drained part turns see-through. All three colourways in every state (top three rows: dark taskbar, bottom three: light taskbar): full, 62%, 35%, 12% (number turns red), charging (with the bolt), asleep (no colour, showing the last level read), no reading yet (`--`).
 
-![All states](docs/images/states.png)
+![Realistic style: Crayon Grey, Jet Black and Ghost in every state](docs/images/realistic.png)
+
+The three ways the realistic mouse can show the level (picked under **Mouse style → Realistic**), at 62% and while charging:
+
+![The three level displays for each colourway](docs/images/displays-en.png)
+
+The **Drawn** style in the same states (top row: dark taskbar, bottom row: light taskbar); it turns blue while charging:
+
+![Drawn style in every state](docs/images/drawn.png)
+
+The mouse photos are © Lofree; the pictures above are the program's own 20-pixel renders of them, enlarged 3x.
 
 > Unofficial tool, not affiliated with Lofree. It only reads the battery level and never changes any mouse settings.
 
@@ -42,8 +52,8 @@ The menus, hover tips and notifications come in English (the default) and Chines
     - **Drained part turns grey-white**: the charged part keeps the mouse's own colour, the part above it turns a pale grey-white.
     - **Drained part turns see-through** (the default): the charged part keeps the mouse's own colour, the part above it turns faint, so the taskbar shows through it.
     - **Charged part in level colours**: the charged part takes the drawn style's level colours (below) with the photo's light and shade, the orange side buttons keep their colour, and the part above turns grey-white.
-  - **Drawn**: a line drawing seen from above (wheel, Λ-shaped button seams, centre line, orange side buttons on the left), as in the screenshots. The charge's colour follows the level: 100% green → 70% yellow-green → 45% yellow → 25% orange → 10% and below red, blending smoothly in between, and turns blue while charging. The drained part is a translucent shell, so the whole mouse is always visible. The outline, centre line, seams and wheel well are 2 px black lines (black lines on colour look thinner than white lines, so they are a little wider than the taskbar's 1.5 px white strokes to look equally heavy).
-  - The realistic style needs one product photo per colourway. It is downloaded from lofree.co the first time that colourway is shown (for the default Ghost, at the first start) and kept on this computer (in `%APPDATA%\HypaceTray\photos`), so it is not downloaded again. Until the photo is there the drawn mouse is shown; the menu shows "(downloading…)" next to the colourway, or "(download failed, will retry)" if it could not be fetched, and it tries again a minute later. The photos are © Lofree and are not part of this repository. Pick **Drawn** if the program should never go online.
+  - **Drawn**: a line drawing seen from above (wheel, Λ-shaped button seams, centre line, orange side buttons on the left), as in the last picture above. The charge's colour follows the level: 100% green → 70% yellow-green → 45% yellow → 25% orange → 10% and below red, blending smoothly in between, and turns blue while charging. The drained part is a translucent shell, so the whole mouse is always visible. The outline, centre line, seams and wheel well are 2 px black lines (black lines on colour look thinner than white lines, so they are a little wider than the taskbar's 1.5 px white strokes to look equally heavy).
+  - The realistic style needs one product photo per colourway. It is downloaded from lofree.co the first time that colourway is shown (for the default Ghost, at the first start) and kept on this computer (in `%APPDATA%\HypaceTray\photos`), so it is not downloaded again. Until the photo is there the drawn mouse is shown; the menu shows "(downloading…)" next to the colourway, or "(download failed, will retry)" if it could not be fetched, and it tries again a minute later. The photos are © Lofree and are not part of this repository; only the small renders pictured above are. Pick **Drawn** if the program should never go online.
 - Follows the taskbar's dark or light theme.
 - Left click: refresh now. Right-click menu: **Refresh now** / **Start with Windows** / **Open the official web driver** / **Mouse style** / **Language** (English or 中文) / **Exit**.
 - Reads the battery every 60 seconds while the mouse is online, and checks every 20 seconds whether it has come online.
