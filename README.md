@@ -1,36 +1,37 @@
+<div align="center">
+
 **English** | [简体中文](README.zh-CN.md)
 
-# HypaceTray — Lofree Hypace battery level in the Windows taskbar
+# HypaceTray
 
-Shows the battery level of a Lofree Hypace mouse right in the Windows taskbar: the percentage, next to a small mouse that fills up with the charge. No need to open the web driver; hover for details.
+Battery level of the Lofree Hypace mouse, right in the Windows taskbar.
 
-![In the taskbar: the battery percentage and the mouse, right of ^](docs/images/taskbar.png)
+<img src="docs/images/hero.png" width="276" alt="The taskbar right of ^: 80 and the Hypace mouse">
 
-By default the mouse is a photo of the Hypace in Ghost, whose drained part turns see-through. All three colourways in every state (top three rows: dark taskbar, bottom three: light taskbar): full, 62%, 35%, 12% (number turns red), charging (with the bolt), asleep (no colour, showing the last level read), no reading yet (`--`).
+</div>
 
-![Realistic style: Crayon Grey, Jet Black and Ghost in every state](docs/images/realistic.png)
+HypaceTray puts the Hypace's battery level right of the taskbar's `^`: the percentage, next to a picture of the mouse that fills up with the charge. It talks to the mouse's 8K receiver directly, so there is no web driver to open; hover for details, left-click to refresh.
 
-The three ways the realistic mouse can show the level (picked under **Mouse style → Realistic**), at 62% and while charging:
+<p align="center">
+  <img src="docs/images/realistic-ghost.png" width="806" alt="The default look on a dark and a light taskbar, in every state">
+  <br>
+  <sub>The default look on a dark and a light taskbar: 100%, 62%, 35%, 12%, charging, asleep (last level read), no reading yet</sub>
+</p>
 
-![The three level displays for each colourway](docs/images/displays-en.png)
+Two more colourways, three ways of showing the level and a drawn style are in the right-click menu: see the **[Gallery](#gallery)**.
 
-The **Drawn** style in the same states (top row: dark taskbar, bottom row: light taskbar); it turns blue while charging:
-
-![Drawn style in every state](docs/images/drawn.png)
-
-The mouse photos are © Lofree; the pictures above are the program's own 20-pixel renders of them, enlarged 3x.
-
+> [!NOTE]
 > Unofficial tool, not affiliated with Lofree. It only reads the battery level and never changes any mouse settings.
 
 ## Requirements
 
-- Windows 11 (uses the .NET Framework 4.x that comes with Windows; nothing to install). Windows 10 should work too but is untested.
+- Windows 11, using the .NET Framework 4.x that comes with it; nothing to install. Windows 10 should work too but is untested.
 - A Lofree Hypace mouse with its 8K receiver (VID `0x3554`, PID `0xFB16`). Other models and receivers are untested.
 
 ## Install and run
 
 1. Download this repository: **Code → Download ZIP** and unzip it, or `git clone` it.
-2. Open PowerShell in the repository folder and run the command below. It builds `build\HypaceTray.exe` with the C# compiler that ships with Windows; no Visual Studio or .NET SDK needed:
+2. Open PowerShell in the repository folder and build `build\HypaceTray.exe` with the C# compiler that ships with Windows (no Visual Studio or .NET SDK needed):
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\build.ps1
@@ -39,26 +40,87 @@ The mouse photos are © Lofree; the pictures above are the program's own 20-pixe
 3. Double-click `build\HypaceTray.exe`. To start it with Windows, tick **Start with Windows** in its right-click menu.
 4. On first run Windows usually tucks the new tray icon under `^`, so the battery first shows left of `^`. Open `^` and drag the number icon onto the taskbar (or turn HypaceTray on under Settings → Personalization → Taskbar → Other system tray icons); the battery then shows right of `^`.
 
-The menus, hover tips and notifications come in English (the default) and Chinese; switch at any time under **Language** in the right-click menu.
-
 ## Features
 
-- Right of the tray's `^` sits one block: the battery percentage, next to a Hypace mouse laid along the diagonal, 20% larger than a normal tray icon. The block takes a single tray slot and follows it when tray icons come and go.
-- The charge rises from the bottom of the mouse. At 20% and below the number itself turns orange or red; a notification pops up once at 20% and once at 10%.
-- While charging, the number climbs and the mouse fills up as the level rises, and a small bolt sits at the mouse's bottom right, like the bolt on Windows' own battery icon (white on a dark taskbar, black on a light one). The bolt is on by default; untick **Mouse style → Show charging bolt** to hide it.
-- A grey number and a colourless mouse mean the mouse is asleep and the last level read is shown; `--` with an empty mouse means no level has been read yet or the receiver was not found (hover to see the last level).
-- **Mouse style** in the right-click menu picks the mouse:
-  - **Realistic** (the default): the Hypace's product photo in one of its three colourways: **Crayon Grey**, **Jet Black** or **Ghost** (the default). The same submenu picks how the photo shows the level:
-    - **Drained part turns grey-white**: the charged part keeps the mouse's own colour, the part above it turns a pale grey-white.
-    - **Drained part turns see-through** (the default): the charged part keeps the mouse's own colour, the part above it turns faint, so the taskbar shows through it.
-    - **Charged part in level colours**: the charged part takes the drawn style's level colours (below) with the photo's light and shade, the orange side buttons keep their colour, and the part above turns grey-white.
-  - **Drawn**: a line drawing seen from above (wheel, Λ-shaped button seams, centre line, orange side buttons on the left), as in the last picture above. The charge's colour follows the level: 100% green → 70% yellow-green → 45% yellow → 25% orange → 10% and below red, blending smoothly in between, and turns blue while charging. The drained part is a translucent shell, so the whole mouse is always visible. The outline, centre line, seams and wheel well are 2 px black lines (black lines on colour look thinner than white lines, so they are a little wider than the taskbar's 1.5 px white strokes to look equally heavy).
-  - The realistic style needs one product photo per colourway. It is downloaded from lofree.co the first time that colourway is shown (for the default Ghost, at the first start) and kept on this computer (in `%APPDATA%\HypaceTray\photos`), so it is not downloaded again. Until the photo is there the drawn mouse is shown; the menu shows "(downloading…)" next to the colourway, or "(download failed, will retry)" if it could not be fetched, and it tries again a minute later. The photos are © Lofree and are not part of this repository; only the small renders pictured above are. Pick **Drawn** if the program should never go online.
-- Follows the taskbar's dark or light theme.
-- Left click: refresh now. Right-click menu: **Refresh now** / **Start with Windows** / **Open the official web driver** / **Mouse style** / **Language** (English or 中文) / **Exit**.
+- **One block in the tray.** The percentage and the mouse sit right of `^` in a single tray slot, the mouse 20% larger than a normal tray icon, and follow the tray as icons come and go.
+- **Level at a glance.** The charge rises from the bottom of the mouse. At 20% and below the number turns orange, then red, and a notification pops up at 20% and again at 10%.
+- **Charging.** The number climbs, the mouse fills up, and a small bolt sits at its bottom right, like the one on Windows' own battery icon.
+- **Asleep or not found.** A grey number and a colourless mouse mean the mouse is asleep and the last level read is shown; `--` with an empty mouse means no level yet or no receiver (hover for the last level).
+- **Dark or light taskbar**, followed automatically.
+- **English or Chinese**, English by default.
 - Reads the battery every 60 seconds while the mouse is online, and checks every 20 seconds whether it has come online.
 
-### How it is displayed
+### Right-click menu
+
+| Item | What it does |
+| --- | --- |
+| **Refresh now** | Reads the battery at once (a left-click does the same). |
+| **Start with Windows** | Starts HypaceTray when you sign in. |
+| **Open the official web driver** | Opens https://www.lofree.tech/ in the browser. |
+| **Mouse style** | The mouse picture and the charging bolt, see below. |
+| **Language** | English or 中文. |
+| **Exit** | Closes HypaceTray. |
+
+### Mouse style
+
+- **Realistic** (default): a photo of the Hypace in **Crayon Grey**, **Jet Black** or **Ghost** (default), showing the level in one of three ways:
+  - **Drained part turns grey-white**: above the charge, the mouse turns a pale grey-white.
+  - **Drained part turns see-through** (default): above the charge, the mouse turns faint and the taskbar shows through.
+  - **Charged part in level colours**: the charge takes the drawn style's colours, keeping the photo's light and shade; above it, grey-white.
+- **Drawn**: a line drawing of the Hypace seen from above. The charge is green at 100% and turns yellow-green, yellow, orange and red as it falls (70%, 45%, 25%, 10%), blue while charging; the drained part is a translucent shell.
+- **Show charging bolt**: on by default.
+
+The realistic style needs one product photo per colourway. It is downloaded from lofree.co the first time that colourway is shown (for the default Ghost, at the first start) and kept in `%APPDATA%\HypaceTray\photos`. Until it arrives the drawn mouse is shown and the menu marks the colourway "(downloading…)", or "(download failed, will retry)" with a new try a minute later. Pick **Drawn** if the program should never go online.
+
+## Gallery
+
+Drawn by the program itself, larger than on the taskbar. Mouse photos © Lofree; the photos themselves are not part of this repository.
+
+<details>
+<summary><b>Every colourway in every state</b></summary>
+<br>
+
+Dark taskbar above, light below: 100%, 62%, 35%, 12%, charging, asleep, no reading yet. Drained part see-through (the default).
+
+**Crayon Grey**
+
+<img src="docs/images/realistic-crayongrey.png" width="806" alt="Crayon Grey in every state">
+
+**Jet Black**
+
+<img src="docs/images/realistic-jetblack.png" width="806" alt="Jet Black in every state">
+
+**Ghost** (default)
+
+<img src="docs/images/realistic-ghost.png" width="806" alt="Ghost in every state">
+
+</details>
+
+<details>
+<summary><b>The three level displays</b></summary>
+<br>
+
+Each picture: 62% and charging.
+
+| | Crayon Grey | Jet Black | Ghost |
+| --- | :---: | :---: | :---: |
+| **Drained part turns grey-white** | <img src="docs/images/display-greywhite-crayongrey.png" width="200" alt="Crayon Grey, grey-white"> | <img src="docs/images/display-greywhite-jetblack.png" width="200" alt="Jet Black, grey-white"> | <img src="docs/images/display-greywhite-ghost.png" width="200" alt="Ghost, grey-white"> |
+| **Drained part turns see-through** (default) | <img src="docs/images/display-seethrough-crayongrey.png" width="200" alt="Crayon Grey, see-through"> | <img src="docs/images/display-seethrough-jetblack.png" width="200" alt="Jet Black, see-through"> | <img src="docs/images/display-seethrough-ghost.png" width="200" alt="Ghost, see-through"> |
+| **Charged part in level colours** | <img src="docs/images/display-levelcolour-crayongrey.png" width="200" alt="Crayon Grey, level colours"> | <img src="docs/images/display-levelcolour-jetblack.png" width="200" alt="Jet Black, level colours"> | <img src="docs/images/display-levelcolour-ghost.png" width="200" alt="Ghost, level colours"> |
+
+</details>
+
+<details>
+<summary><b>Drawn style</b></summary>
+<br>
+
+Dark taskbar above, light below, in the same states.
+
+<img src="docs/images/drawn.png" width="806" alt="The drawn style in every state">
+
+</details>
+
+## How it sits in the taskbar
 
 - A transparent tray icon holds a slot in the tray, and the battery block is a small window attached to the taskbar on top of it (the same technique TrafficMonitor uses on Windows 11). Because it is covered, that slot cannot be dragged to reorder it.
 - If the transparent icon gets tucked under `^`, the block moves to the left of `^`; drag the number icon from `^` onto the taskbar and the block returns to the right of `^`.
@@ -67,7 +129,7 @@ The menus, hover tips and notifications come in English (the default) and Chines
 
 ## Development
 
-- `build.ps1` builds three programs: `HypaceTray.exe` (the tray program), `icontests.exe` (tests for the icon drawing and the menu texts; it should print `PASS`) and `probe.exe [seconds]` (a command-line debugging tool that prints the receiver's raw replies and the battery level).
+`build.ps1` builds three programs: `HypaceTray.exe` (the tray program), `icontests.exe` (tests for the icon drawing and the menu texts; it should print `PASS`) and `probe.exe [seconds]` (a command-line debugging tool that prints the receiver's raw replies and the battery level).
 
 ## How it works
 
