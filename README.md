@@ -6,17 +6,13 @@
 
 Battery level of the Lofree Hypace mouse, right in the Windows taskbar.
 
-<img src="docs/images/hero.png" width="276" alt="The taskbar right of ^: 80 and the Hypace mouse">
+<img src="docs/images/realistic-ghost.png" width="806" alt="The default look on a dark and a light taskbar, in every state">
+
+<sub>On a dark and a light taskbar: 100%, 62%, 35%, 12%, charging, asleep (last level read), no reading yet</sub>
 
 </div>
 
 HypaceTray puts the Hypace's battery level right of the taskbar's `^`: the percentage, next to a picture of the mouse that fills up with the charge. It talks to the mouse's 8K receiver directly, so there is no web driver to open; hover for details, left-click to refresh.
-
-<p align="center">
-  <img src="docs/images/realistic-ghost.png" width="806" alt="The default look on a dark and a light taskbar, in every state">
-  <br>
-  <sub>The default look on a dark and a light taskbar: 100%, 62%, 35%, 12%, charging, asleep (last level read), no reading yet</sub>
-</p>
 
 Two more colourways, three ways of showing the level and a drawn style are in the right-click menu: see the **[Gallery](#gallery)**.
 

@@ -6,17 +6,13 @@
 
 在 Windows 任务栏里直接显示洛斐 Hypace 鼠标的电量。
 
-<img src="docs/images/hero.png" width="276" alt="任务栏 ^ 右边：80 和 Hypace 鼠标">
+<img src="docs/images/realistic-ghost.png" width="806" alt="默认样式在深色和浅色任务栏上的各种状态">
+
+<sub>深色和浅色任务栏：100%、62%、35%、12%、充电中、休眠（显示上次读到的电量）、还没读到电量</sub>
 
 </div>
 
 HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的右边：电量百分比，加一只随电量填满的小鼠标。程序直接和鼠标的 8K 接收器通信，不用打开网页驱动；悬停看详细信息，左键单击立即刷新。
-
-<p align="center">
-  <img src="docs/images/realistic-ghost.png" width="806" alt="默认样式在深色和浅色任务栏上的各种状态">
-  <br>
-  <sub>默认样式，深色和浅色任务栏：100%、62%、35%、12%、充电中、休眠（显示上次读到的电量）、还没读到电量</sub>
-</p>
 
 右键菜单里还有另外两种配色、三种电量显示方式和线条样式，见 **[效果图](#效果图)**。
 
