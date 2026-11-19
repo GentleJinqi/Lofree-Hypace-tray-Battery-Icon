@@ -168,36 +168,31 @@ namespace HypaceTray.Tests
             return runs.Count == 0 ? 0 : runs[runs.Count / 2];
         }
 
-        // A stand-in for a Lofree product photo (the real ones are never part of the repo): flat (246,246,246)
-        // background; a grey 320 x 620 ellipse mouse, its front (top 80 px) blue, an orange side button on its left,
-        // and a background-coloured patch enclosed inside the mouse.
-        static Bitmap SyntheticPhoto()
-        {
-            var b = new Bitmap(1000, 1000, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            using (var g = Graphics.FromImage(b))
-            using (var bg = new SolidBrush(Color.FromArgb(246, 246, 246)))
-            using (var grey = new SolidBrush(Color.FromArgb(120, 120, 120)))
-            using (var blue = new SolidBrush(Color.FromArgb(40, 90, 200)))
-            using (var orange = new SolidBrush(Color.FromArgb(255, 90, 31)))
-            {
-                g.FillRectangle(bg, 0, 0, 1000, 1000);
-                g.FillEllipse(grey, 340, 205, 320, 620);
-                g.SetClip(new Rectangle(0, 0, 1000, 285));
-                g.FillEllipse(blue, 340, 205, 320, 620);
-                g.ResetClip();
-                g.FillRectangle(orange, 330, 430, 16, 51);
-                g.FillRectangle(bg, 480, 600, 41, 41);
-            }
-            return b;
-        }
-
+        // A stand-in cut-out for the painting tests (simple shapes whose colours are easy to check): on a transparent
+        // background, a grey 320 x 620 ellipse mouse, its front (top 80 px) blue, an orange side button on its left,
+        // and a light patch inside the mouse.
         static MousePhoto syntheticMouse;
         static MousePhoto SyntheticMouse()
         {
             if (syntheticMouse == null)
-                using (var photo = SyntheticPhoto())
-                using (var cut = RealMouse.Cutout(photo))
-                    syntheticMouse = new MousePhoto(cut);
+                using (var b = new Bitmap(330, 620, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+                {
+                    using (var g = Graphics.FromImage(b))
+                    using (var light = new SolidBrush(Color.FromArgb(246, 246, 246)))
+                    using (var grey = new SolidBrush(Color.FromArgb(120, 120, 120)))
+                    using (var blue = new SolidBrush(Color.FromArgb(40, 90, 200)))
+                    using (var orange = new SolidBrush(Color.FromArgb(255, 90, 31)))
+                    {
+                        g.Clear(Color.Transparent);
+                        g.FillEllipse(grey, 10, 0, 320, 620);
+                        g.SetClip(new Rectangle(0, 0, 330, 80));
+                        g.FillEllipse(blue, 10, 0, 320, 620);
+                        g.ResetClip();
+                        g.FillRectangle(orange, 0, 225, 16, 51);
+                        g.FillRectangle(light, 150, 395, 41, 41);
+                    }
+                    syntheticMouse = new MousePhoto(b);
+                }
             return syntheticMouse;
         }
 
@@ -1017,37 +1012,6 @@ namespace HypaceTray.Tests
             // ---------- realistic mouse (synthetic photo) ----------
             Func<Color, bool> opaque = p => p.A == 255, visible = p => p.A > 0;
 
-            Test("CutoutFindsTheMouse", () =>
-            {
-                using (var photo = SyntheticPhoto())
-                using (var cut = RealMouse.Cutout(photo))
-                {
-                    Check(Math.Abs(cut.Width - 331) <= 3 && Math.Abs(cut.Height - 621) <= 3, "cut-out " + cut.Width + "x" + cut.Height);
-                    Check(cut.GetPixel(0, 0).A == 0 && cut.GetPixel(cut.Width - 1, cut.Height - 1).A == 0, "corners not transparent");
-                    Color mid = cut.GetPixel(cut.Width / 2 + 5, cut.Height / 2);
-                    Check(mid.A == 255 && NearRgb(mid, Color.FromArgb(120, 120, 120), 15), "middle " + Rgb(mid) + " a" + mid.A);
-                }
-            });
-
-            Test("CutoutKeepsEnclosedLightParts", () =>
-            {
-                using (var photo = SyntheticPhoto())
-                using (var cut = RealMouse.Cutout(photo))
-                {
-                    Color patch = cut.GetPixel(500 - 330, 620 - 205);
-                    Check(patch.A == 255, "enclosed light patch was cut away");
-                }
-            });
-
-            Test("LooksLikeMouseChecksSize", () =>
-            {
-                Check(RealMouse.LooksLikeMouse(331, 621), "the mouse");
-                Check(RealMouse.LooksLikeMouse(326, 633), "Crayon Grey's size");
-                Check(!RealMouse.LooksLikeMouse(1000, 1000), "whole photo (background not found)");
-                Check(!RealMouse.LooksLikeMouse(120, 90), "small blob");
-                Check(!RealMouse.LooksLikeMouse(600, 620), "too wide");
-            });
-
             Test("RealMouseFillsTheSquare", () =>
             {
                 foreach (int s in new[] { 20, 24, 32 })
@@ -1158,47 +1122,36 @@ namespace HypaceTray.Tests
                     CheckSameImage(a, b, "look vs RealMouse");
             });
 
-            // ---------- photo download and cache ----------
-            Test("PhotoUrls", () =>
+            // ---------- the built-in photos ----------
+            Test("PhotosAreBuiltIn", () =>
             {
-                Check(PhotoStore.Url(Colourway.CrayonGrey) == "https://www.lofree.co/cdn/shop/files/Hypace_CrayonGrey_PI01.webp?width=1000", PhotoStore.Url(Colourway.CrayonGrey));
-                Check(PhotoStore.Url(Colourway.JetBlack) == "https://www.lofree.co/cdn/shop/files/Hypace_JetBlack_PI01.webp?width=1000", PhotoStore.Url(Colourway.JetBlack));
-                Check(PhotoStore.Url(Colourway.Ghost) == "https://www.lofree.co/cdn/shop/files/Hypace_Ghost_PI01.webp?width=1000", PhotoStore.Url(Colourway.Ghost));
+                foreach (Colourway c in Enum.GetValues(typeof(Colourway)))
+                {
+                    var p = Photos.Load(c);
+                    Check(p != null, c + " is not built in");
+                    Check(p.Width >= 300 && p.Width <= 350 && p.Height >= 600 && p.Height <= 660, c + " is " + p.Width + "x" + p.Height);
+                }
             });
 
-            Func<string> tempDir = () => System.IO.Path.Combine(System.IO.Path.GetTempPath(), "hypace-test-" + Guid.NewGuid().ToString("N"));
-
-            Test("PhotoCacheRoundTrip", () =>
+            Test("BuiltInPhotosAreCutOut", () =>
             {
-                string dir = tempDir();
-                try
+                foreach (Colourway c in Enum.GetValues(typeof(Colourway)))
                 {
-                    var store = new PhotoStore(dir);
-                    using (var photo = SyntheticPhoto())
-                    using (var cut = RealMouse.Cutout(photo))
-                        store.Save(Colourway.CrayonGrey, cut);
-                    string file = System.IO.Path.Combine(dir, "CrayonGrey.png");
-                    Check(store.PathFor(Colourway.CrayonGrey) == file && System.IO.File.Exists(file), "not saved as " + file);
-                    var p = store.TryLoad(Colourway.CrayonGrey);
-                    Check(p != null && Math.Abs(p.Width - 331) <= 3 && Math.Abs(p.Height - 621) <= 3, "loaded " + (p == null ? "nothing" : p.Width + "x" + p.Height));
+                    var p = Photos.Load(c);
+                    int w = p.Width, h = p.Height;
+                    Check(p.A[0] == 0 && p.A[w - 1] == 0 && p.A[(h - 1) * w] == 0 && p.A[h * w - 1] == 0, c + ": corners not transparent");
+                    Check(p.A[(h / 2) * w + w / 2] == 1, c + ": middle not opaque");
                 }
-                finally { if (System.IO.Directory.Exists(dir)) System.IO.Directory.Delete(dir, true); }
             });
 
-            Test("BadPhotoCacheIsIgnored", () =>
+            Test("BuiltInPhotoPaintsTheMouse", () =>
             {
-                string dir = tempDir();
-                try
+                using (var m = RealMouse.Paint(Photos.Load(Colourway.Ghost), 62, IconState.Normal, LevelDisplay.SeeThrough, 24))
                 {
-                    var store = new PhotoStore(dir);
-                    Check(store.TryLoad(Colourway.CrayonGrey) == null, "missing file");
-                    System.IO.Directory.CreateDirectory(dir);
-                    System.IO.File.WriteAllText(store.PathFor(Colourway.JetBlack), "not a png");
-                    Check(store.TryLoad(Colourway.JetBlack) == null, "text file");
-                    using (var small = new Bitmap(50, 50)) small.Save(store.PathFor(Colourway.Ghost), System.Drawing.Imaging.ImageFormat.Png);
-                    Check(store.TryLoad(Colourway.Ghost) == null, "50x50 picture");
+                    int solid = 0;
+                    for (int x = 0; x < 24; x++) for (int y = 0; y < 24; y++) if (m.GetPixel(x, y).A == 255) solid++;
+                    Check(solid >= 120, "opaque pixels in the 24 px Ghost " + solid);
                 }
-                finally { if (System.IO.Directory.Exists(dir)) System.IO.Directory.Delete(dir, true); }
             });
 
             // ---------- mouse style settings and menu texts ----------
@@ -1268,10 +1221,10 @@ namespace HypaceTray.Tests
                 UiText en = UiText.For(Language.English), zh = UiText.For(Language.Chinese);
                 Check(zh.MouseStyle == "鼠标样式" && zh.Drawn == "线条" && zh.Realistic == "仿真", "zh style: " + zh.MouseStyle + " " + zh.Drawn + " " + zh.Realistic);
                 Check(zh.GreyWhite == "没电部分变灰白" && zh.SeeThrough == "没电部分变透明" && zh.LevelColour == "电量部分用电量颜色", "zh displays");
-                Check(zh.ChargingBolt == "充电时显示闪电" && zh.Downloading == "（下载中…）" && zh.DownloadFailed == "（下载失败，稍后重试）", "zh bolt and download");
+                Check(zh.ChargingBolt == "充电时显示闪电", "zh bolt");
                 Check(en.MouseStyle == "Mouse style" && en.Drawn == "Drawn" && en.Realistic == "Realistic", "en style: " + en.MouseStyle + " " + en.Drawn + " " + en.Realistic);
                 Check(en.GreyWhite == "Drained part turns grey-white" && en.SeeThrough == "Drained part turns see-through" && en.LevelColour == "Charged part in level colours", "en displays");
-                Check(en.ChargingBolt == "Show charging bolt" && en.Downloading == " (downloading…)" && en.DownloadFailed == " (download failed, will retry)", "en bolt and download");
+                Check(en.ChargingBolt == "Show charging bolt", "en bolt");
             });
 
             int failed = 0;

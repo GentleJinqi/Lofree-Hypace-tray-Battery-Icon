@@ -68,11 +68,11 @@ Two more colourways, three ways of showing the level and a drawn style are in th
 - **Drawn**: a line drawing of the Hypace seen from above. The charge is green at 100% and turns yellow-green, yellow, orange and red as it falls (70%, 45%, 25%, 10%), blue while charging; the drained part is a translucent shell.
 - **Show charging bolt**: on by default.
 
-The realistic style needs one product photo per colourway. The program downloads it by itself from lofree.co the first time that colourway is shown (for the default Ghost, at the first start) and kept in `%APPDATA%\HypaceTray\photos`. Until it arrives the drawn mouse is shown and the menu marks the colourway "(downloading…)", or "(download failed, will retry)" with a new try a minute later. Pick **Drawn** if the program should never go online.
+The realistic style uses Lofree's product photo of each colourway. The photos are in [`photos/`](photos/) and built into `HypaceTray.exe`, so nothing is downloaded and the program never goes online.
 
 ## Gallery
 
-Drawn by the program itself, larger than on the taskbar. Mouse photos © Lofree; the photos themselves are not part of this repository.
+Drawn by the program itself, larger than on the taskbar. Mouse photos © Lofree.
 
 <details>
 <summary><b>Every colourway in every state</b></summary>
@@ -152,3 +152,5 @@ The official web driver at https://www.lofree.tech/ talks to the receiver over W
 ## License
 
 [MIT](LICENSE): free to use, modify and distribute, as long as the copyright notice is kept.
+
+The MIT license covers the code only. The product photos in [`photos/`](photos/), and the pictures of the realistic mouse made from them (in `docs/images/`), are © Lofree and are not covered by it; see [photos/README.md](photos/README.md).

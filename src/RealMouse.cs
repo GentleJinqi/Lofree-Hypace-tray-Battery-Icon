@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -54,69 +53,12 @@ namespace HypaceTray
         }
     }
 
-    // The realistic mouse: Lofree's top-down product photo, cut out of its flat background, tilted like the drawn
+    // The realistic mouse: Lofree's top-down product photo (cut out, built in: Photos), tilted like the drawn
     // mouse and shaded by the level in one of three ways (LevelDisplay).
     public static class RealMouse
     {
         internal const float Tilt = MouseIconPainter.Tilt;   // degrees clockwise, front up and to the right
-        const int BackgroundTolerance = 10;                   // per channel, from the photo's corner colour
         const int Samples = 16;                               // per pixel and axis when shrinking the photo
-
-        // The mouse cut out of its flat background (the colour of the photo's top-left pixel, within
-        // BackgroundTolerance), found by flooding in from the border so light parts inside the mouse stay.
-        // Cropped to the mouse; the background is transparent. Null if nothing but background.
-        public static Bitmap Cutout(Bitmap photo)
-        {
-            int w = photo.Width, h = photo.Height;
-            byte[] px = ReadPixels(photo);
-            int b0 = px[0], g0 = px[1], r0 = px[2];
-            var bg = new bool[w * h];
-            var queue = new Queue<int>();
-            Action<int> visit = i =>
-            {
-                if (bg[i]) return;
-                if (Math.Abs(px[i * 4] - b0) > BackgroundTolerance || Math.Abs(px[i * 4 + 1] - g0) > BackgroundTolerance
-                    || Math.Abs(px[i * 4 + 2] - r0) > BackgroundTolerance) return;
-                bg[i] = true;
-                queue.Enqueue(i);
-            };
-            for (int x = 0; x < w; x++) { visit(x); visit((h - 1) * w + x); }
-            for (int y = 0; y < h; y++) { visit(y * w); visit(y * w + w - 1); }
-            while (queue.Count > 0)
-            {
-                int i = queue.Dequeue(), x = i % w, y = i / w;
-                if (x > 0) visit(i - 1);
-                if (x < w - 1) visit(i + 1);
-                if (y > 0) visit(i - w);
-                if (y < h - 1) visit(i + w);
-            }
-
-            int x0 = w, y0 = h, x1 = -1, y1 = -1;
-            for (int y = 0; y < h; y++)
-                for (int x = 0; x < w; x++)
-                    if (!bg[y * w + x]) { x0 = Math.Min(x0, x); x1 = Math.Max(x1, x); y0 = Math.Min(y0, y); y1 = Math.Max(y1, y); }
-            if (x1 < 0) return null;
-
-            int cw = x1 - x0 + 1, ch = y1 - y0 + 1;
-            var cut = new byte[cw * ch * 4];
-            for (int y = 0; y < ch; y++)
-                for (int x = 0; x < cw; x++)
-                {
-                    int s = (y + y0) * w + x + x0, d = (y * cw + x) * 4;
-                    if (bg[s]) continue;
-                    cut[d] = px[s * 4]; cut[d + 1] = px[s * 4 + 1]; cut[d + 2] = px[s * 4 + 2]; cut[d + 3] = 255;
-                }
-            return WritePixels(cut, cw, ch);
-        }
-
-        // A sensible top-down Hypace cut-out (the three official photos give about 326 x 630). Anything else means
-        // the photo has changed (no flat background, another angle) and must not be used.
-        public static bool LooksLikeMouse(int width, int height)
-        {
-            if (height < 500 || height > 750 || width < 250 || width > 400) return false;
-            double ratio = (double)width / height;
-            return ratio >= 0.4 && ratio <= 0.65;
-        }
 
         // The photo tilted 45 degrees clockwise and scaled so it touches all four sides of the size x size square,
         // each pixel averaged from Samples x Samples bilinear samples. The level line is horizontal, from the

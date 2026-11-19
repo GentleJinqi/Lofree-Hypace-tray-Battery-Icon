@@ -28,8 +28,6 @@ namespace HypaceTray
         public string LevelColour { get; private set; }
         public string ChargingBolt { get; private set; }
         public string ShowNumber { get; private set; }
-        public string Downloading { get; private set; }      // appended to a colourway while its photo downloads
-        public string DownloadFailed { get; private set; }
 
         // format strings: {0} = level, {1} = when it was last read
         string lowText, criticalText;
@@ -58,8 +56,6 @@ namespace HypaceTray
             LevelColour = "Charged part in level colours",
             ChargingBolt = "Show charging bolt",
             ShowNumber = "Show battery percentage",
-            Downloading = " (downloading…)",
-            DownloadFailed = " (download failed, will retry)",
             lowText = "{0}% left.",
             criticalText = "{0}% left, please charge it soon.",
             notOnline = "Mouse not online (move it to wake it up)",
@@ -96,8 +92,6 @@ namespace HypaceTray
             LevelColour = "电量部分用电量颜色",
             ChargingBolt = "充电时显示闪电",
             ShowNumber = "显示电量数字",
-            Downloading = "（下载中…）",
-            DownloadFailed = "（下载失败，稍后重试）",
             lowText = "剩余 {0}%。",
             criticalText = "剩余 {0}%，请尽快充电。",
             notOnline = "鼠标未在线（晃动一下鼠标唤醒）",

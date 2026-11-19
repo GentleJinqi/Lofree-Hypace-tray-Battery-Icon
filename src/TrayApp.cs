@@ -61,15 +61,11 @@ namespace HypaceTray
         readonly Dictionary<string, string> settings;
         UiText text;
 
-        // mouse style: drawn, or a product photo (downloaded once per colourway, in the background)
+        // mouse style: drawn, or a product photo (built into the program, one per colourway)
         readonly ToolStripMenuItem styleItem, drawnItem, realisticItem, greyWhiteItem, seeThroughItem, levelColourItem, boltItem;
         readonly Dictionary<Colourway, ToolStripMenuItem> colourwayItems = new Dictionary<Colourway, ToolStripMenuItem>();
         readonly MouseSettings mouseChoice;
-        readonly PhotoStore photoStore;
         readonly Dictionary<Colourway, MousePhoto> photos = new Dictionary<Colourway, MousePhoto>();
-        readonly HashSet<Colourway> downloading = new HashSet<Colourway>();
-        readonly Dictionary<Colourway, DateTime> failedAt = new Dictionary<Colourway, DateTime>();
-        static readonly TimeSpan RetryAfter = TimeSpan.FromSeconds(60);
         volatile bool exiting;
         IntPtr numberHandle = IntPtr.Zero, mouseHandle = IntPtr.Zero;
 
@@ -107,7 +103,6 @@ namespace HypaceTray
             exitItem = new ToolStripMenuItem("", null, delegate { ExitThread(); });
 
             mouseChoice = MouseSettings.Parse(settings);
-            photoStore = new PhotoStore(Path.Combine(dataDir, "photos"));
             drawnItem = new ToolStripMenuItem("", null, delegate { SetMouse(false, mouseChoice.Colourway); });
             realisticItem = new ToolStripMenuItem("", null, delegate { SetMouse(true, mouseChoice.Colourway); });
             foreach (Colourway c in Enum.GetValues(typeof(Colourway)))
@@ -404,8 +399,7 @@ namespace HypaceTray
             realisticItem.Checked = mouseChoice.Realistic;
             foreach (var kv in colourwayItems)
             {
-                kv.Value.Text = ColourwayName(kv.Key) + (downloading.Contains(kv.Key) ? text.Downloading
-                              : failedAt.ContainsKey(kv.Key) && !photos.ContainsKey(kv.Key) ? text.DownloadFailed : "");
+                kv.Value.Text = ColourwayName(kv.Key);
                 kv.Value.Checked = kv.Key == mouseChoice.Colourway;
             }
             greyWhiteItem.Checked = mouseChoice.Display == LevelDisplay.GreyWhite;
@@ -437,41 +431,19 @@ namespace HypaceTray
             ShowMouseIcon();
         }
 
-        // The realistic mouse when its photo is here; until then (downloading, or offline) the drawn mouse.
+        // The realistic mouse (the drawn one if its photo is somehow missing from the program).
         MouseLook CurrentLook()
         {
             MousePhoto photo = mouseChoice.Realistic ? PhotoFor(mouseChoice.Colourway) : null;
             return new MouseLook(photo, mouseChoice.Display, mouseChoice.ChargingBolt);
         }
 
-        // The colourway's photo: from memory, else from the local cache. Otherwise starts downloading it from
-        // lofree.co in the background (one at a time per colourway; after a failure, again at the first redraw a
-        // minute later) and returns null for now; the result redraws the block.
+        // The colourway's built-in photo, read once.
         MousePhoto PhotoFor(Colourway c)
         {
             MousePhoto photo;
-            if (photos.TryGetValue(c, out photo)) return photo;
-            DateTime failed;
-            if (downloading.Contains(c) || (failedAt.TryGetValue(c, out failed) && DateTime.Now - failed < RetryAfter)) return null;
-            photo = photoStore.TryLoad(c);
-            if (photo != null) { photos[c] = photo; return photo; }
-            downloading.Add(c);
-            ApplyMenuText();
-            ThreadPool.QueueUserWorkItem(delegate
-            {
-                MousePhoto got = null;
-                try { got = photoStore.Download(c); }
-                catch (Exception) { }
-                Post(() =>
-                {
-                    downloading.Remove(c);
-                    if (got != null) { photos[c] = got; failedAt.Remove(c); }
-                    else failedAt[c] = DateTime.Now;
-                    ApplyMenuText();
-                    Render();
-                });
-            });
-            return null;
+            if (!photos.TryGetValue(c, out photo)) photos[c] = photo = Photos.Load(c);
+            return photo;
         }
 
         void SetLanguage(Language lang)
