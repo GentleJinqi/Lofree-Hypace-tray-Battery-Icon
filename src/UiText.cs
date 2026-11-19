@@ -27,6 +27,7 @@ namespace HypaceTray
         public string SeeThrough { get; private set; }
         public string LevelColour { get; private set; }
         public string ChargingBolt { get; private set; }
+        public string ShowNumber { get; private set; }
         public string Downloading { get; private set; }      // appended to a colourway while its photo downloads
         public string DownloadFailed { get; private set; }
 
@@ -56,6 +57,7 @@ namespace HypaceTray
             SeeThrough = "Drained part turns see-through",
             LevelColour = "Charged part in level colours",
             ChargingBolt = "Show charging bolt",
+            ShowNumber = "Show battery percentage",
             Downloading = " (downloading…)",
             DownloadFailed = " (download failed, will retry)",
             lowText = "{0}% left.",
@@ -93,6 +95,7 @@ namespace HypaceTray
             SeeThrough = "没电部分变透明",
             LevelColour = "电量部分用电量颜色",
             ChargingBolt = "充电时显示闪电",
+            ShowNumber = "显示电量数字",
             Downloading = "（下载中…）",
             DownloadFailed = "（下载失败，稍后重试）",
             lowText = "剩余 {0}%。",

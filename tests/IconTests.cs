@@ -973,6 +973,37 @@ namespace HypaceTray.Tests
                             CheckSameImage(a, b, lvl + "% " + st);
             });
 
+            Test("BadgeWithoutNumberIsTheMouse", () =>
+            {
+                foreach (int lvl in new[] { 0, 12, 62, 100 })
+                    foreach (IconState st in Enum.GetValues(typeof(IconState)))
+                        foreach (bool light in new[] { false, true })
+                            using (var block = BadgePainter.Paint(lvl, st, light, 20, boltLook, false))
+                            using (var mouse = boltLook.PaintMouse(lvl, st, light, 24, 2f))
+                            {
+                                string what = lvl + "% " + st + (light ? " light" : " dark");
+                                Check(block.Width == 24 && block.Height == 24, what + ": block " + block.Width + "x" + block.Height);
+                                // the same mouse; empty pixels stay barely there (alpha 1) so the block still takes clicks
+                                for (int x = 0; x < 24; x++)
+                                    for (int y = 0; y < 24; y++)
+                                    {
+                                        Color p = block.GetPixel(x, y), q = mouse.GetPixel(x, y);
+                                        Check(q.A == 0 ? p.A == 1 : p == q, what + " differs at " + x + "," + y);
+                                    }
+                            }
+            });
+
+            Test("BadgeShowsNumberByDefault", () =>
+            {
+                foreach (IconState st in Enum.GetValues(typeof(IconState)))
+                    using (var shown = BadgePainter.Paint(62, st, false, 20, boltLook, true))
+                    using (var dflt = BadgePainter.Paint(62, st, false, 20, boltLook))
+                    {
+                        Check(shown.Width > 24 && shown.Width == dflt.Width, st + ": widths " + shown.Width + " / " + dflt.Width);
+                        CheckSameImage(shown, dflt, st.ToString());
+                    }
+            });
+
             Test("LookPaintsTrayMouseToo", () =>
             {
                 using (var m = boltLook.PaintMouse(50, IconState.Charging, false, 20, 2f))
@@ -1178,6 +1209,7 @@ namespace HypaceTray.Tests
                       "defaults: realistic " + m.Realistic + ", " + m.Colourway + ", " + m.Display + ", bolt " + m.ChargingBolt);
                 var old = MouseSettings.Parse(SettingsText.Parse("iconSize=Large\nlanguage=en"));   // a settings file from before the mouse styles
                 Check(old.Realistic && old.Colourway == Colourway.Ghost && old.Display == LevelDisplay.SeeThrough && old.ChargingBolt, "older settings file");
+                Check(m.ShowNumber && old.ShowNumber, "the number shows by default");
             });
 
             Test("MouseSettingsRoundTrip", () =>
@@ -1203,6 +1235,25 @@ namespace HypaceTray.Tests
                 var three = SettingsText.Parse("");
                 new MouseSettings { Realistic = false, Colourway = Colourway.CrayonGrey, Display = LevelDisplay.GreyWhite, ChargingBolt = true }.WriteTo(three);
                 Check(three["colourway"] == "CrayonGrey" && three["levelDisplay"] == "greywhite", SettingsText.Format(three));
+            });
+
+            Test("NumberSettingRoundTrip", () =>
+            {
+                foreach (bool show in new[] { false, true })
+                {
+                    var s = SettingsText.Parse("language=zh");
+                    new MouseSettings { ShowNumber = show }.WriteTo(s);
+                    Check(s["showNumber"] == (show ? "on" : "off"), "written as " + s["showNumber"]);
+                    Check(MouseSettings.Parse(SettingsText.Parse(SettingsText.Format(s))).ShowNumber == show, "came back wrong for " + show);
+                }
+                Check(MouseSettings.Parse(SettingsText.Parse("showNumber=maybe")).ShowNumber, "unknown value hides the number");
+                Check(!MouseSettings.Parse(SettingsText.Parse("showNumber= OFF ")).ShowNumber, "OFF with spaces");
+            });
+
+            Test("NumberMenuText", () =>
+            {
+                Check(UiText.For(Language.English).ShowNumber == "Show battery percentage", UiText.For(Language.English).ShowNumber);
+                Check(UiText.For(Language.Chinese).ShowNumber == "显示电量数字", UiText.For(Language.Chinese).ShowNumber);
             });
 
             Test("MouseSettingsUnknownValues", () =>

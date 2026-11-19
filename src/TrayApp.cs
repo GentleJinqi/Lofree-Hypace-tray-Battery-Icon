@@ -53,7 +53,7 @@ namespace HypaceTray
         readonly IntPtr blankHandle;
         Icon numberIcon;
         Placement placement = Placement.None;
-        readonly ToolStripMenuItem statusItem, refreshItem, autoStartItem, webItem, languageItem, englishItem, chineseItem, exitItem;
+        readonly ToolStripMenuItem statusItem, refreshItem, autoStartItem, webItem, numberItem, languageItem, englishItem, chineseItem, exitItem;
         readonly Control ui;
         readonly Thread worker;
         readonly AutoResetEvent poke = new AutoResetEvent(false);
@@ -122,12 +122,13 @@ namespace HypaceTray
             levelColourItem = new ToolStripMenuItem("", null, delegate { SetDisplay(LevelDisplay.LevelColour); });
             realisticItem.DropDownItems.AddRange(new ToolStripItem[] { new ToolStripSeparator(), greyWhiteItem, seeThroughItem, levelColourItem });
             boltItem = new ToolStripMenuItem("", null, delegate { SetBolt(!mouseChoice.ChargingBolt); });
+            numberItem = new ToolStripMenuItem("", null, delegate { mouseChoice.ShowNumber = !mouseChoice.ShowNumber; MouseChanged(); });
             styleItem = new ToolStripMenuItem("");
             styleItem.DropDownItems.AddRange(new ToolStripItem[] { drawnItem, realisticItem, new ToolStripSeparator(), boltItem });
             ApplyMenuText();
 
             menu = new ContextMenuStrip();
-            menu.Items.AddRange(new ToolStripItem[] { statusItem, new ToolStripSeparator(), refreshItem, autoStartItem, webItem, styleItem, languageItem, new ToolStripSeparator(), exitItem });
+            menu.Items.AddRange(new ToolStripItem[] { statusItem, new ToolStripSeparator(), refreshItem, autoStartItem, webItem, numberItem, styleItem, languageItem, new ToolStripSeparator(), exitItem });
 
             int iconSize = SystemInformation.SmallIconSize.Width;
             using (var empty = new Bitmap(iconSize, iconSize, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
@@ -146,7 +147,7 @@ namespace HypaceTray
             badge.RightClick += delegate { ShowBadgeMenu(); };
             trackTimer.Tick += delegate { UpdatePlacement(); };
             trackTimer.Start();
-            alertTimer.Tick += delegate { alertTimer.Stop(); if (placement != Placement.TrayIcons) mouseTray.Visible = false; };
+            alertTimer.Tick += delegate { alertTimer.Stop(); ShowMouseIcon(); };
 
             SystemEvents.UserPreferenceChanged += OnThemeChanged;
             Render();
@@ -275,10 +276,13 @@ namespace HypaceTray
             int level = Math.Max(shownLevel, 0), size = SystemInformation.SmallIconSize.Width;
             bool light = TaskbarIsLight();
             MouseLook look = CurrentLook();
-            PaintNumberIcon(() => NumberIconPainter.Paint(level, state, light, size));
-            SetIcon(mouseTray, ref mouseHandle, () => look.PaintMouse(level, state, light, size, MouseIconPainter.LineWidth * size / 20f));
+            bool showNumber = mouseChoice.ShowNumber;
+            Func<Bitmap> paintMouse = () => look.PaintMouse(level, state, light, size, MouseIconPainter.LineWidth * size / 20f);
+            // without the number, the number icon (which also holds the block's slot) shows the mouse instead
+            PaintNumberIcon(showNumber ? () => NumberIconPainter.Paint(level, state, light, size) : paintMouse);
+            SetIcon(mouseTray, ref mouseHandle, paintMouse);
             badge.SetTip(tip);
-            try { badge.SetImage(BadgePainter.Paint(level, state, light, size, look)); }
+            try { badge.SetImage(BadgePainter.Paint(level, state, light, size, look, showNumber)); }
             catch (Exception) { }   // e.g. GDI resources exhausted: keep the previous block; the next poll redraws
             UpdatePlacement();
         }
@@ -294,7 +298,14 @@ namespace HypaceTray
             if (now == placement) return;
             placement = now;
             ShowNumberIcon();
-            mouseTray.Visible = now == Placement.TrayIcons || alertTimer.Enabled;
+            ShowMouseIcon();
+        }
+
+        // The mouse icon is in the tray beside the number icon when the block cannot attach (unless the number is
+        // hidden: then the number icon shows the mouse), and during a notification.
+        void ShowMouseIcon()
+        {
+            mouseTray.Visible = (placement == Placement.TrayIcons && mouseChoice.ShowNumber) || alertTimer.Enabled;
         }
 
         void PaintNumberIcon(Func<Bitmap> paint)
@@ -401,6 +412,8 @@ namespace HypaceTray
             seeThroughItem.Checked = mouseChoice.Display == LevelDisplay.SeeThrough;
             levelColourItem.Checked = mouseChoice.Display == LevelDisplay.LevelColour;
             boltItem.Checked = mouseChoice.ChargingBolt;
+            numberItem.Text = text.ShowNumber;
+            numberItem.Checked = mouseChoice.ShowNumber;
         }
 
         // ---------------- mouse style ----------------
@@ -421,6 +434,7 @@ namespace HypaceTray
             SaveSettings();
             ApplyMenuText();
             Render();
+            ShowMouseIcon();
         }
 
         // The realistic mouse when its photo is here; until then (downloading, or offline) the drawn mouse.

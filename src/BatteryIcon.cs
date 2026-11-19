@@ -86,6 +86,12 @@ namespace HypaceTray
 
         public static Bitmap Paint(int level, IconState state, bool lightTaskbar, int size, MouseLook look)
         {
+            return Paint(level, state, lightTaskbar, size, look, true);
+        }
+
+        // showNumber false: the block is the mouse alone.
+        public static Bitmap Paint(int level, IconState state, bool lightTaskbar, int size, MouseLook look, bool showNumber)
+        {
             level = Math.Max(0, Math.Min(100, level));
             int S = size, M = (int)Math.Round(S * MouseScale);
             float k = S / 20f, pad = 1 * k, gap = 3 * k, dy = (M - S) / 2f;
@@ -99,7 +105,7 @@ namespace HypaceTray
             {
                 var r = glyph.GetBounds();
                 using (var m = new Matrix()) { m.Translate(pad - r.X, 0); glyph.Transform(m); }
-                int numW = (int)Math.Ceiling(pad + r.Width + gap);
+                int numW = showNumber ? (int)Math.Ceiling(pad + r.Width + gap) : 0;
 
                 var bmp = new Bitmap(numW + M, M, PixelFormat.Format32bppArgb);
                 using (var g = Graphics.FromImage(bmp))
@@ -108,7 +114,7 @@ namespace HypaceTray
                     g.Clear(Color.Transparent);
                     g.SmoothingMode = SmoothingMode.AntiAlias;
                     g.PixelOffsetMode = PixelOffsetMode.Half;
-                    g.FillPath(brush, glyph);
+                    if (showNumber) g.FillPath(brush, glyph);
                 }
                 for (int y = 0; y < M; y++)
                     for (int x = 0; x < M; x++)

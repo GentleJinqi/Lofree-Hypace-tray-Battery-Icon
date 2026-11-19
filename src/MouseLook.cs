@@ -38,15 +38,16 @@ namespace HypaceTray
         }
     }
 
-    // The mouse choices kept in settings.txt: mouseStyle=drawn|realistic, colourway=CrayonGrey|JetBlack|Ghost,
-    // levelDisplay=greywhite|seethrough|levelcolour, chargingBolt=on|off. Unknown values fall back to the defaults:
-    // the realistic Ghost, drained part see-through, bolt on.
+    // The block's choices kept in settings.txt: mouseStyle=drawn|realistic, colourway=CrayonGrey|JetBlack|Ghost,
+    // levelDisplay=greywhite|seethrough|levelcolour, chargingBolt=on|off, showNumber=on|off. Unknown values fall back
+    // to the defaults: the realistic Ghost, drained part see-through, bolt on, number shown.
     public sealed class MouseSettings
     {
         public bool Realistic = true;
         public Colourway Colourway = Colourway.Ghost;
         public LevelDisplay Display = LevelDisplay.SeeThrough;
         public bool ChargingBolt = true;
+        public bool ShowNumber = true;
 
         static readonly string[] DisplayNames = { "greywhite", "seethrough", "levelcolour" };   // LevelDisplay order
 
@@ -60,6 +61,7 @@ namespace HypaceTray
             int d = Array.IndexOf(DisplayNames, Value(s, "levelDisplay"));
             if (d >= 0) m.Display = (LevelDisplay)d;
             m.ChargingBolt = Value(s, "chargingBolt") != "off";
+            m.ShowNumber = Value(s, "showNumber") != "off";
             return m;
         }
 
@@ -69,6 +71,7 @@ namespace HypaceTray
             s["colourway"] = Colourway.ToString();
             s["levelDisplay"] = DisplayNames[(int)Display];
             s["chargingBolt"] = ChargingBolt ? "on" : "off";
+            s["showNumber"] = ShowNumber ? "on" : "off";
         }
 
         static string Value(IDictionary<string, string> s, string key)

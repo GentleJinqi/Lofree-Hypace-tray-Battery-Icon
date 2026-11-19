@@ -42,6 +42,7 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 - **电量一眼可见。** 鼠标里的电量从下往上涨。电量 ≤20% 时数字变成橙色、再到红色，电量降到 20% 和 10% 时各弹一次提醒。
 - **充电。** 数字往上涨，鼠标跟着填满，右下角还有一个小闪电，和 Windows 自己电池图标里的闪电一样。
 - **休眠或没找到接收器。** 数字变灰、鼠标没有颜色，表示鼠标在休眠，显示的是上次读到的电量；数字显示 `--`、鼠标是空的，表示还没读到电量或者没找到接收器（悬停可以看到上次的电量）。
+- **数字可以隐藏。** 取消勾选"显示电量数字"，就只显示鼠标。
 - **深色/浅色任务栏**，自动跟随。
 - **英文或中文**，默认英文。
 - 鼠标在线时每 60 秒读一次电量，离线时每 20 秒检查一次是否上线。
@@ -55,6 +56,7 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 | **立即刷新** | 马上读一次电量（左键单击也一样）。 |
 | **开机自启动** | 登录 Windows 时自动启动 HypaceTray。 |
 | **打开官方网页驱动** | 在浏览器里打开 https://www.lofree.tech/。 |
+| **显示电量数字** | 鼠标旁边的电量数字，默认打开；取消勾选就只显示鼠标。 |
 | **鼠标样式** | 鼠标的样子和充电闪电，见下。 |
 | **语言** | English 或中文。 |
 | **退出** | 关闭 HypaceTray。 |
@@ -68,7 +70,7 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 - **线条**：从上方看的 Hypace 线条画。电量 100% 时是绿色，随着电量下降依次变成黄绿、黄、橙、红（70%、45%、25%、10%），充电时变蓝；没电的部分是半透明的底壳。
 - **充电时显示闪电**：默认打开。
 
-仿真样式每种配色需要一张产品照片：第一次显示这种配色时（默认的 Ghost 就是第一次启动时）从 lofree.co 下载，保存在 `%APPDATA%\HypaceTray\photos`。下载好之前先显示线条鼠标，菜单里这个配色后面会显示"（下载中…）"，下载不了时显示"（下载失败，稍后重试）"，一分钟后再试。如果不希望程序联网，选 **线条** 即可。
+仿真样式每种配色需要一张产品照片：程序会在第一次显示这种配色时（默认的 Ghost 就是第一次启动时）自动从 lofree.co 下载，保存在 `%APPDATA%\HypaceTray\photos`。下载好之前先显示线条鼠标，菜单里这个配色后面会显示"（下载中…）"，下载不了时显示"（下载失败，稍后重试）"，一分钟后再试。如果不希望程序联网，选 **线条** 即可。
 
 ## 效果图
 
@@ -105,6 +107,16 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 | **没电部分变灰白** | <img src="docs/images/display-greywhite-crayongrey.png" width="200" alt="Crayon Grey，没电部分变灰白"> | <img src="docs/images/display-greywhite-jetblack.png" width="200" alt="Jet Black，没电部分变灰白"> | <img src="docs/images/display-greywhite-ghost.png" width="200" alt="Ghost，没电部分变灰白"> |
 | **没电部分变透明**（默认） | <img src="docs/images/display-seethrough-crayongrey.png" width="200" alt="Crayon Grey，没电部分变透明"> | <img src="docs/images/display-seethrough-jetblack.png" width="200" alt="Jet Black，没电部分变透明"> | <img src="docs/images/display-seethrough-ghost.png" width="200" alt="Ghost，没电部分变透明"> |
 | **电量部分用电量颜色** | <img src="docs/images/display-levelcolour-crayongrey.png" width="200" alt="Crayon Grey，电量部分用电量颜色"> | <img src="docs/images/display-levelcolour-jetblack.png" width="200" alt="Jet Black，电量部分用电量颜色"> | <img src="docs/images/display-levelcolour-ghost.png" width="200" alt="Ghost，电量部分用电量颜色"> |
+
+</details>
+
+<details>
+<summary><b>不显示电量数字</b></summary>
+<br>
+
+取消勾选"显示电量数字"后：上面是深色任务栏，下面是浅色任务栏，状态同上。
+
+<img src="docs/images/no-number.png" width="530" alt="默认样式不显示电量数字时的各种状态">
 
 </details>
 

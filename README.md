@@ -42,6 +42,7 @@ Two more colourways, three ways of showing the level and a drawn style are in th
 - **Level at a glance.** The charge rises from the bottom of the mouse. At 20% and below the number turns orange, then red, and a notification pops up at 20% and again at 10%.
 - **Charging.** The number climbs, the mouse fills up, and a small bolt sits at its bottom right, like the one on Windows' own battery icon.
 - **Asleep or not found.** A grey number and a colourless mouse mean the mouse is asleep and the last level read is shown; `--` with an empty mouse means no level yet or no receiver (hover for the last level).
+- **Number optional.** Untick **Show battery percentage** to show the mouse alone.
 - **Dark or light taskbar**, followed automatically.
 - **English or Chinese**, English by default.
 - Reads the battery every 60 seconds while the mouse is online, and checks every 20 seconds whether it has come online.
@@ -53,6 +54,7 @@ Two more colourways, three ways of showing the level and a drawn style are in th
 | **Refresh now** | Reads the battery at once (a left-click does the same). |
 | **Start with Windows** | Starts HypaceTray when you sign in. |
 | **Open the official web driver** | Opens https://www.lofree.tech/ in the browser. |
+| **Show battery percentage** | The number next to the mouse, on by default; untick it for the mouse alone. |
 | **Mouse style** | The mouse picture and the charging bolt, see below. |
 | **Language** | English or 中文. |
 | **Exit** | Closes HypaceTray. |
@@ -66,7 +68,7 @@ Two more colourways, three ways of showing the level and a drawn style are in th
 - **Drawn**: a line drawing of the Hypace seen from above. The charge is green at 100% and turns yellow-green, yellow, orange and red as it falls (70%, 45%, 25%, 10%), blue while charging; the drained part is a translucent shell.
 - **Show charging bolt**: on by default.
 
-The realistic style needs one product photo per colourway. It is downloaded from lofree.co the first time that colourway is shown (for the default Ghost, at the first start) and kept in `%APPDATA%\HypaceTray\photos`. Until it arrives the drawn mouse is shown and the menu marks the colourway "(downloading…)", or "(download failed, will retry)" with a new try a minute later. Pick **Drawn** if the program should never go online.
+The realistic style needs one product photo per colourway. The program downloads it by itself from lofree.co the first time that colourway is shown (for the default Ghost, at the first start) and kept in `%APPDATA%\HypaceTray\photos`. Until it arrives the drawn mouse is shown and the menu marks the colourway "(downloading…)", or "(download failed, will retry)" with a new try a minute later. Pick **Drawn** if the program should never go online.
 
 ## Gallery
 
@@ -103,6 +105,16 @@ Each picture: 62% and charging.
 | **Drained part turns grey-white** | <img src="docs/images/display-greywhite-crayongrey.png" width="200" alt="Crayon Grey, grey-white"> | <img src="docs/images/display-greywhite-jetblack.png" width="200" alt="Jet Black, grey-white"> | <img src="docs/images/display-greywhite-ghost.png" width="200" alt="Ghost, grey-white"> |
 | **Drained part turns see-through** (default) | <img src="docs/images/display-seethrough-crayongrey.png" width="200" alt="Crayon Grey, see-through"> | <img src="docs/images/display-seethrough-jetblack.png" width="200" alt="Jet Black, see-through"> | <img src="docs/images/display-seethrough-ghost.png" width="200" alt="Ghost, see-through"> |
 | **Charged part in level colours** | <img src="docs/images/display-levelcolour-crayongrey.png" width="200" alt="Crayon Grey, level colours"> | <img src="docs/images/display-levelcolour-jetblack.png" width="200" alt="Jet Black, level colours"> | <img src="docs/images/display-levelcolour-ghost.png" width="200" alt="Ghost, level colours"> |
+
+</details>
+
+<details>
+<summary><b>Without the percentage</b></summary>
+<br>
+
+**Show battery percentage** unticked: dark taskbar above, light below, in the same states.
+
+<img src="docs/images/no-number.png" width="530" alt="The default look without the number, in every state">
 
 </details>
 
