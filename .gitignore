@@ -1,0 +1,6 @@
+# build output (build.ps1 recreates it)
+build/
+
+# local development notes
+.superpowers/
+docs/superpowers/
