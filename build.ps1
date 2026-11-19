@@ -13,7 +13,7 @@ $photos = 'CrayonGrey', 'JetBlack', 'Ghost' | ForEach-Object { "/resource:$root\
 if ($LASTEXITCODE -ne 0) { throw "icontests build failed" }
 
 & $csc /nologo /codepage:65001 /optimize+ /target:winexe /platform:anycpu `
-    /win32manifest:"$root\src\app.manifest" `
+    /win32manifest:"$root\src\app.manifest" /win32icon:"$root\src\app.ico" `
     /r:System.Windows.Forms.dll /r:System.Drawing.dll @photos `
     /out:"$out\HypaceTray.exe" "$root\src\LofreeHid.cs" "$root\src\BatteryIcon.cs" "$root\src\TaskbarBadge.cs" "$root\src\UiText.cs" "$root\src\MouseLook.cs" "$root\src\RealMouse.cs" "$root\src\Photos.cs" "$root\src\TrayHint.cs" "$root\src\TrayApp.cs" "$root\src\AssemblyInfo.cs"
 if ($LASTEXITCODE -ne 0) { throw "HypaceTray build failed" }

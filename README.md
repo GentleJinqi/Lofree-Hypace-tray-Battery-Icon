@@ -149,6 +149,8 @@ Dark taskbar above, light below, in the same states.
 
 `build.ps1` builds three programs: `HypaceTray.exe` (the tray program), `icontests.exe` (tests for the icon drawing and the menu texts; it should print `PASS`) and `probe.exe [seconds]` (a command-line debugging tool that prints the receiver's raw replies and the battery level).
 
+The program icon `src/app.ico` is made from the photos by `tools/make-icon.ps1` (it also writes `build\app-icon-preview.png` to look at); `build.ps1` only uses the committed icon.
+
 GitHub Actions builds and tests every push to `main`. Pushing a version tag such as `v1.0.1` (the same version as in `src/AssemblyInfo.cs`) also publishes a release with the `HypaceTray.exe` it built.
 
 ## How it works
@@ -165,4 +167,4 @@ The official web driver at https://www.lofree.tech/ talks to the receiver over W
 
 [MIT](LICENSE): free to use, modify and distribute, as long as the copyright notice is kept.
 
-The MIT license covers the code only. The product photos in [`photos/`](photos/), and the pictures of the realistic mouse made from them (in `docs/images/`), are © Lofree and are not covered by it; see [photos/README.md](photos/README.md).
+The MIT license covers the code only. The product photos in [`photos/`](photos/), and what is made from them (the pictures of the realistic mouse in `docs/images/` and the program icon `src/app.ico`), are © Lofree and are not covered by it; see [photos/README.md](photos/README.md).

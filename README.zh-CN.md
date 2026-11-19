@@ -151,6 +151,8 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 
 `build.ps1` 同时生成三个程序：`HypaceTray.exe`（托盘程序）、`icontests.exe`（图标绘制和菜单文字的测试，运行后应显示 `PASS`）、`probe.exe [秒数]`（命令行调试工具，打印接收器返回的原始数据和电量）。
 
+程序图标 `src/app.ico` 由 `tools/make-icon.ps1` 用照片生成（同时生成预览图 `build\app-icon-preview.png`）；`build.ps1` 只使用仓库里已有的图标。
+
 每次推送到 `main`，GitHub Actions 都会编译并测试。推送版本标签（例如 `v1.0.1`，要和 `src/AssemblyInfo.cs` 里的版本号一致）后，还会用编译出的 `HypaceTray.exe` 自动发布新版本。
 
 ## 原理
@@ -167,4 +169,4 @@ HypaceTray 把洛斐（Lofree）Hypace 鼠标的电量显示在任务栏 `^` 的
 
 [MIT](LICENSE)：可以自由使用、修改和分发，保留版权声明即可。
 
-MIT 许可只适用于代码。[`photos/`](photos/) 里的产品照片，以及用这些照片画出的仿真鼠标图片（在 `docs/images/` 里），版权归洛斐（Lofree）所有，不适用 MIT 许可；详见 [photos/README.md](photos/README.md)。
+MIT 许可只适用于代码。[`photos/`](photos/) 里的产品照片，以及用这些照片做出来的东西（`docs/images/` 里的仿真鼠标图片和程序图标 `src/app.ico`），版权归洛斐（Lofree）所有，不适用 MIT 许可；详见 [photos/README.md](photos/README.md)。
